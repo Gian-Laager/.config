@@ -1,0 +1,20 @@
+imap ö <esc>
+vmap ö <esc>
+
+let mapleader=" "
+map <leader>a :tabprevious<CR>
+map <leader>f :tabnext<CR>
+
+map <leader>h <C-W>h<CR>
+map <leader>j <C-W>j<CR>
+map <leader>k <C-W>k<CR>
+map <leader>l <C-W>l<CR>
+
+nmap <leader>p :call VSCodeCall("workbench.action.quickOpen")<CR>
+nmap <leader>o :call VSCodeCall("workbench.action.gotoSymbol")<CR>
+nmap <leader>P :call VSCodeCall("workbench.action.showCommands")<CR>
+nmap gcc <Plug>VSCodeCommentary 
+vmap gcc <Plug>VSCodeCommentary
+nmap rf :call VSCodeCall("editor.action.refactor")<CR>
+nmap rn :call VSCodeNotify("editor.action.rename")<CR>
+nmap gi :call VSCodeCall("editor.action.goToImplementation")<CR>

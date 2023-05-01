@@ -1,0 +1,48 @@
+{
+    "vscode-neovim.neovimExecutablePaths.linux": "/usr/bin/nvim",
+    "vscode-neovim.neovimInitVimPaths.linux": "/home/gianl/.config/code-vimrc",
+    "files.autoSave": "afterDelay",
+    "file.autoSaveDelay": 100,
+    "security.workspace.trust.untrustedFiles": "open",
+    "explorer.confirmDragAndDrop": false,
+    "explorer.confirmDelete": false,
+    "editor.lineNumbers": "relative",
+    "editor.suggestSelection": "first",
+    "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+    "files.exclude": {
+        "**/.classpath": true,
+        "**/.project": true,
+        "**/.settings": true,
+        "**/.factorypath": true
+    },
+    "[haskell]": {
+        "editor.defaultFormatter": "sjurmillidahl.ormolu-vscode"
+    },
+    "C_Cpp.updateChannel": "Insiders",
+    "terminal.integrated.fontFamily": "monospace",
+    "terminal.integrated.fontSize": 15,
+    "editor.inlayHints.fontFamily": "'Fira Sans', 'FantasqueSansMono Nerd Font Mono', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'",
+    "debug.console.fontFamily": "'Fira Sans', 'FantasqueSansMono Nerd Font Mono', 'Droid Sans Mono', 'monospace', monospace, 'Droid Sans Fallback'",
+    "vscode-neovim.mouseSelectionStartVisualMode": true,
+    "cmake.configureOnOpen": true,
+    "redhat.telemetry.enabled": true,
+    "texlab.server.autoDownload": true,
+    "haskell.manageHLS": "GHCup",
+    "editor.inlineSuggest.enabled": true,
+    "github.copilot.enable": {
+    
+
+        "*": true,
+        "yaml": false,
+        "plaintext": false,
+        "markdown": false,
+        "cpp": true
+    },
+    "github.copilot.advanced": {
+    
+    },
+    "github.copilot.inlineSuggest.enable": true,
+    "[python]": {
+        "editor.formatOnType": true
+    },
+}
