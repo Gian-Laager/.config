@@ -70,6 +70,7 @@ require("harpoon").setup {
 -- Mappings.
 -- See `:help vim.diagnostic.*` for documentation on any of the below functions
 local opts = { noremap = true, silent = true }
+vim.keymap.set('n', '<leader>pd', require('telescope.builtin').diagnostics, { desc = '[S]earch [D]iagnostics' })
 vim.keymap.set('n', '<space><tab>', require("harpoon.ui").toggle_quick_menu, opts)
 vim.keymap.set('n', '<space>m', require("harpoon.mark").add_file, opts)
 vim.keymap.set('n', '<space>1', function() require("harpoon.ui").nav_file(1) end, opts)
@@ -82,8 +83,8 @@ vim.keymap.set('n', '<space>7', function() require("harpoon.ui").nav_file(7) end
 vim.keymap.set('n', '<space>8', function() require("harpoon.ui").nav_file(8) end, opts)
 vim.keymap.set('n', '<space>9', function() require("harpoon.ui").nav_file(9) end, opts)
 vim.keymap.set('n', '<space>0', function() require("harpoon.ui").nav_file(0) end, opts)
-vim.keymap.set('n', '<space>s', require("harpoon.ui").nav_prev, opts)
-vim.keymap.set('n', '<space>d', require("harpoon.ui").nav_next, opts)
+vim.keymap.set('n', '<space>e', require("harpoon.ui").nav_prev, opts)
+vim.keymap.set('n', '<space>w', require("harpoon.ui").nav_next, opts)
 vim.keymap.set('n', '<space>M', require("harpoon.mark").rm_file, opts)
 vim.keymap.set('n', '<space>C', require("harpoon.mark").clear_all, opts)
 vim.keymap.set('n', '<space>u', require("harpoon.mark").toggle_file, opts)
@@ -93,10 +94,18 @@ vim.keymap.set('n', '[d', vim.diagnostic.goto_prev, opts)
 vim.keymap.set('n', ']d', vim.diagnostic.goto_next, opts)
 vim.keymap.set('n', '<space>q', vim.diagnostic.setloclist, opts)
 
-vim.keymap.set('n', '<space>b', function() require'dap'.toogle_breakpoint() end, opts)
-vim.keymap.set('n', '<space>s', function() require'dap'.step_over() end, opts)
-vim.keymap.set('n', '<space>d', function() require'dap'.step_into() end, opts)
+vim.keymap.set('n', '<space>db', function() vim.cmd("DapToggleBreakpoint") end, opts)
+vim.keymap.set('n', '<space>ds', function() vim.cmd("DapStepOver") end, opts)
+vim.keymap.set('n', '<space>di', function() vim.cmd("DapStepInto") end, opts)
+vim.keymap.set('n', '<space>do', function() vim.cmd("DapStepOut") end, opts)
+vim.keymap.set('n', '<space>dt', function() vim.cmd("DapTerminate") end, opts)
+vim.keymap.set('n', '<space>dc', function() vim.cmd("DapContinue") end, opts)
+vim.keymap.set('n', '<space>dq', function()
+    vim.cmd("DapTerminate") 
+    require'dapui'.close()
+end, opts)
 
+vim.keymap.set('n', '<space>gm', '<cmd>Magit<CR>', opts)
 
 local lsp = require('lsp-zero')
 
@@ -133,7 +142,7 @@ lsp.on_attach(function(client, bufnr)
     vim.keymap.set("n", 'gl', vim.diagnostic.open_float, opts)
     vim.keymap.set("n", '[d', vim.diagnostic.goto_prev, opts)
     vim.keymap.set("n", ']d', vim.diagnostic.goto_next, opts)
-    vim.keymap.set("n", '<M-L>', "<cmd>LspZeroFormat<cr>", opts)
+    vim.keymap.set("n", '<leader>cf', "<cmd>LspZeroFormat<cr>", opts)
 end)
 
 lsp.setup_nvim_cmp({
@@ -152,6 +161,8 @@ require 'lspconfig'.eslint.setup {
         "vue", "svelte", "astro" },
     root_dir = function() return vim.loop.cwd() end -- run lsp for javascript in any directory
 }
+
+vim.fn.sign_define('DapBreakpoint', {text='●', texthl='red', linehl='', numhl=''})
 
 require("dapui").setup()
 
@@ -193,3 +204,31 @@ cmp.setup({
 vim.lsp.handlers["textDocument/publishDiagnostics"] =
     vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics,
         { update_in_insert = true })
+
+require("telescope").load_extension("refactoring")
+
+require('gitsigns').setup {
+  signs = {
+    add          = { text = '+' },
+    change       = { text = '│' },
+    delete       = { text = '_' },
+    topdelete    = { text = '‾' },
+    changedelete = { text = '~' },
+    untracked    = { text = '┆' },
+  },
+}
+
+-- remap to open the Telescope refactoring menu in visual mode
+vim.api.nvim_set_keymap(
+	"v",
+	"<leader>rr",
+	"<Esc><cmd>lua require('telescope').extensions.refactoring.refactors()<CR>",
+	{ noremap = true }
+)
+
+require("neotest-gtest").setup({})
+require("neotest").setup({
+  adapters = {
+    require("neotest-gtest")
+  }
+})

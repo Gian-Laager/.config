@@ -58,7 +58,7 @@ set scrolloff=8
 set signcolumn=yes
 set colorcolumn=120
 
-call plug#begin("~/.vim/plugged")
+call plug#begin("~/.config/nvim/plugged")
 Plug 'nvim-telescope/telescope.nvim'
 " Collection of common configurations for the Nvim LSP client
 Plug 'neovim/nvim-lspconfig'
@@ -112,13 +112,22 @@ Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
 Plug 'jayp0521/mason-nvim-dap.nvim'
 Plug 'ldelossa/nvim-dap-projects'
+Plug 'jreybert/vimagit'
+Plug 'ThePrimeagen/refactoring.nvim'
+Plug 'ThePrimeagen/refactoring.nvim'
+Plug 'lewis6991/gitsigns.nvim'
+Plug 'emilienlemaire/clang-tidy.nvim'
+Plug 'github/copilot.vim'
+Plug 'antoinemadec/FixCursorHold.nvim'
+Plug 'alfaix/neotest-gtest'
+Plug 'nvim-neotest/neotest'
 call plug#end()
 
 " set spell spelllang=en_us " spell checking
 set termguicolors
 
-let g:NERDTreeDirArrowExpandable = ''
-let g:NERDTreeDirArrowCollapsible = ''
+let g:NERDTreeDirArrowExpandable = '󰁔'
+let g:NERDTreeDirArrowCollapsible = '󰁅'
 
 let NERDTreeStatusline="%{exists('b:NERDTree')?fnamemodify(b:NERDTree.root.path.str(), ':~'):''}"
 
@@ -134,10 +143,10 @@ nnoremap <leader>pu <cmd>UndotreeToggle<cr>
 nnoremap <leader>gz <cmd>ZenMode<cr>
 
 
-sign define DiagnosticSignError text= linehl= texthl=DiagnosticSignError numhl= 
-sign define DiagnosticSignWarn text= linehl= texthl=DiagnosticSignWarn numhl= 
+sign define DiagnosticSignError text= linehl= texthl=DiagnosticSignError numhl= 
+sign define DiagnosticSignWarn text= linehl= texthl=DiagnosticSignWarn numhl= 
 sign define DiagnosticSignInfo text= linehl= texthl=DiagnosticSignInfo numhl= 
-sign define DiagnosticSignHint text=  linehl= texthl=DiagnosticSignHint numhl= 
+sign define DiagnosticSignHint text=  linehl= texthl=DiagnosticSignHint numhl= 
 
 au BufNewFile,BufRead *.wgsl set filetype=wgsl
 

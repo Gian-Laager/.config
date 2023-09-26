@@ -45,4 +45,6 @@
     "[python]": {
         "editor.formatOnType": true
     },
+    "workbench.colorTheme": "Default Dark Modern",
+    "application.shellEnvironmentResolutionTimeout": 100,
 }

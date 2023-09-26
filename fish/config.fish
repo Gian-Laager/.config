@@ -153,8 +153,11 @@ alias jctl="journalctl -p 3 -xb"
 alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
 
 
+set -q GHCUP_INSTALL_BASE_PREFIX[1]; or set GHCUP_INSTALL_BASE_PREFIX $HOME ; set -gx PATH $HOME/.cabal/bin $PATH /home/gianl/.ghcup/bin # ghcup-env
+
 ## Run paleofetch if session is interactive
 if status --is-interactive
+   set -U PF_ASCII "arch"
    pfetch
    if set -q TMUX
        return
@@ -162,4 +165,5 @@ if status --is-interactive
        exec tmux
    end
 end
+
 

@@ -57,7 +57,7 @@
 
 (with-eval-after-load 'evil-maps
   (define-key evil-insert-state-map (kbd "jj") 'evil-normal-state)
-  (define-key evil-visual-state-map (kbd "jj") 'evil-normal-state)
+  ;; (define-key evil-visual-state-map (kbd "jj") 'evil-normal-state)
   (define-key evil-visual-state-map (kbd "s") 'evil-substitute)
   (define-key evil-normal-state-map (kbd "s") 'evil-substitute)
   (define-key evil-normal-state-map (kbd "SPC b a") 'evil-prev-buffer)

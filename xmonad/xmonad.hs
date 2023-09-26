@@ -90,24 +90,24 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     [ ((modm .|. shiftMask, xK_Return), spawn $ XMonad.terminal conf)
 
     -- launch dmenu
-    -- , ((modm,               xK_p     ), spawn "dmenu_run")
-    , ((modm,               xK_p     ), spawn "rofi -show run")
+    , ((modm .|. shiftMask, xK_p     ), spawn "rofi -show run")
+    , ((modm,               xK_p     ), spawn "rofi -show drun")
     , ((modm,               xK_u     ), spawn "rofi -show window")
 
-    , ((modm,               xK_f     ), spawn "firedragon")
+    , ((modm,               xK_f     ), spawn "chromium")
 
     , ((modm,               xK_o     ), spawn "thunar")
 
     , ((0, xF86XK_AudioMute), spawn "pactl set-sink-mute @DEFAULT_SINK@ toggle")
-    , ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -10%")
-    , ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +10%")
+    , ((0, xF86XK_AudioLowerVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ -5%")
+    , ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%")
+    , ((0, xF86XK_MonBrightnessUp), spawn "brightnessctl -d amdgpu_bl1 s +10%")
+	, ((0, xF86XK_MonBrightnessDown), spawn "brightnessctl -d amdgpu_bl1 s 10%-")
     , ((0, xF86XK_AudioStop), spawn "playerctl play-pause")
     , ((0, xF86XK_AudioPlay), spawn "playerctl play-pause")
     , ((0, xF86XK_AudioPrev), spawn "playerctl previous")
     , ((0, xF86XK_AudioNext), spawn "playerctl next")
 
-    -- launch gmrun
-    , ((modm .|. shiftMask, xK_p     ), spawn "gmrun")
 
     -- close focused window
     , ((modm .|. shiftMask, xK_c     ), kill)
@@ -367,6 +367,7 @@ myStartupHook = do
     spawnOnce "xautolock -time 10 -locker i3lock -i /usr/share/wallpapers/EveningGlow/contents/images/2560x1440.jpg &"
     spawnOnce "pasystray &"
     spawnOnce "pa-applet &"
+    spawnOnce "parcellite &"
 
     -- spawnOnce "~/.config/xmonad/scripts/systray.sh &"
 
