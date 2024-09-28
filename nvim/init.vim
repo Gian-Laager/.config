@@ -78,7 +78,12 @@ Plug 'nvim-lua/plenary.nvim' " don't forget to add this one if you don't have it
 Plug 'ThePrimeagen/harpoon'
 Plug 'doums/darcula'
 Plug 'morhetz/gruvbox'
-Plug 'joshdick/onedark.vim'
+
+Plug 'kuangliu/onedark.vim'
+" Plug 'ii14/onedark.nvim'
+
+" Plug 'joshdick/onedark.vim' " only for nvim < 0.10
+
 Plug 'nvim-lualine/lualine.nvim'
 " If you want to have icons in your statusline choose one of these
 Plug 'kyazdani42/nvim-web-devicons'
@@ -105,9 +110,10 @@ Plug 'casonadams/walh'
 
 Plug 'mbbill/undotree'
 Plug 'folke/zen-mode.nvim'
-Plug 'weilbith/nvim-code-action-menu'
+" Plug 'aznhe21/actions-preview.nvim'
+" Plug 'ibhagwan/fzf-lua'
+Plug 'nvimdev/lspsaga.nvim'
 
-Plug 'mfussenegger/nvim-dap'
 Plug 'mfussenegger/nvim-dap'
 Plug 'rcarriga/nvim-dap-ui'
 Plug 'jayp0521/mason-nvim-dap.nvim'
@@ -121,10 +127,24 @@ Plug 'github/copilot.vim'
 Plug 'antoinemadec/FixCursorHold.nvim'
 Plug 'alfaix/neotest-gtest'
 Plug 'nvim-neotest/neotest'
+Plug 'kassio/neoterm'
+" Plug 'epwalsh/obsidian.nvim'
+Plug 'jamestthompson3/nvim-remote-containers'
+Plug 'nvim-neotest/nvim-nio'
+Plug 'CopilotC-Nvim/CopilotChat.nvim', { 'branch': 'canary' }
+Plug 'petRUShka/vim-opencl'
+Plug 'lervag/vimtex'
+Plug 'mfussenegger/nvim-jdtls'
+
+
+Plug 'folke/tokyonight.nvim'
+Plug 'rose-pine/neovim'
 call plug#end()
 
-" set spell spelllang=en_us " spell checking
+
+" set spell spelllang=en_us,de_ch " spell checking
 set termguicolors
+
 
 let g:NERDTreeDirArrowExpandable = '󰁔'
 let g:NERDTreeDirArrowCollapsible = '󰁅'
@@ -150,6 +170,17 @@ sign define DiagnosticSignHint text=  linehl= texthl=DiagnosticSignHint numhl
 
 au BufNewFile,BufRead *.wgsl set filetype=wgsl
 
+let g:vimtex_view_method = 'zathura'
+
+" Or with a generic interface:
+let g:vimtex_view_general_viewer = 'okular'
+let g:vimtex_view_general_options = '--unique file:@pdf\#src:@line@tex'
+
+let g:vimtex_compiler_method = 'latexmk'
+" let g:vimtex_compiler_engine = 'lualatex'
+"
+"
+
 lua <<EOF
 require("config")
 EOF
@@ -160,3 +191,13 @@ call system("test -f .vim")
 if  v:shell_error == 0
     so .vim
 endif
+
+imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
+let g:copilot_no_tab_map = v:true
+let g:copilot_enabled = v:false
+
+
+
+"
+" hi Container guifg=#BADA55 guibg=Black
+" set statusline+=%#Container#%{g:currentContainer}

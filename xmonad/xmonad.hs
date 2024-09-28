@@ -38,6 +38,9 @@ import Data.Tree
 
 import qualified XMonad.StackSet as W
 import qualified Data.Map        as M
+import XMonad.Layout.ResizableTile
+import XMonad.Layout.Reflect
+import XMonad.Layout.ThreeColumns (ThreeCol(ThreeCol, ThreeColMid))
 
 
 -- The preferred terminal program, which is used in a binding below and by
@@ -81,6 +84,17 @@ myWorkspaceIndices = M.fromList $ zipWith (,) myWorkspaces [1..] -- (,) == \x y 
 myNormalBorderColor  = "#d3dae3"
 myFocusedBorderColor = "#C50ED2"
 
+rofiPerpexityConfig = 
+    "listview { " ++
+        "lines: 0; " ++
+    "} " ++
+    " " ++
+    "entry { " ++
+        "placeholder: 'Type prompt...'; " ++
+        "padding: 10px; " ++
+        "margin: 20px 0px; " ++
+    "} "
+
 ------------------------------------------------------------------------
 -- Key bindings. Add, modify or remove key bindings here.
 --
@@ -94,7 +108,12 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_p     ), spawn "rofi -show drun")
     , ((modm,               xK_u     ), spawn "rofi -show window")
 
+    -- , ((modm,               xK_a     ), spawn ("rofi -show perplexity -theme-str '" ++ rofiPerpexityConfig ++ "'"))
+    , ((modm,               xK_a     ), spawn "chromium 'https://www.perplexity.ai/'")
+    , ((modm,               xK_d     ), spawn "rofi -show duckduckgo")
+
     , ((modm,               xK_f     ), spawn "chromium")
+    , ((modm .|. shiftMask, xK_F     ), spawn "firedragon")
 
     , ((modm,               xK_o     ), spawn "thunar")
 
@@ -103,6 +122,8 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((0, xF86XK_AudioRaiseVolume), spawn "pactl set-sink-volume @DEFAULT_SINK@ +5%")
     , ((0, xF86XK_MonBrightnessUp), spawn "brightnessctl -d amdgpu_bl1 s +10%")
 	, ((0, xF86XK_MonBrightnessDown), spawn "brightnessctl -d amdgpu_bl1 s 10%-")
+	, ((0, xF86XK_KbdBrightnessUp), spawn "brightnessctl --device='asus::kbd_backlight' set +1")
+	, ((0, xF86XK_KbdBrightnessDown), spawn "brightnessctl --device='asus::kbd_backlight' set 1-")
     , ((0, xF86XK_AudioStop), spawn "playerctl play-pause")
     , ((0, xF86XK_AudioPlay), spawn "playerctl play-pause")
     , ((0, xF86XK_AudioPrev), spawn "playerctl previous")
@@ -237,12 +258,12 @@ windowCount = gets $ Just . show . length . W.integrate' . W.stack . W.workspace
 -- The available layouts.  Note that each layout is separated by |||,
 -- which denotes layout choice.
 --
-myLayout = (spacingWithEdge 8 $ avoidStruts $ tiled ||| masters2 ||| Full) ||| (noBorders Full)
+myLayout = (spacingWithEdge 8 $ avoidStruts $ tiled ||| threeCol ||| Full) ||| (noBorders Full)
   where
      -- default tiling algorithm partitions the screen into two panes
      tiled   = Tall nmaster delta ratio
 
-     masters2 = Tall 2 delta (1/2)
+     threeCol = ThreeCol 1 delta (1/2)
 
      -- The default number of windows in the master pane
      nmaster = 1
@@ -271,6 +292,7 @@ myLayout = (spacingWithEdge 8 $ avoidStruts $ tiled ||| masters2 ||| Full) ||| (
 myManageHook =  composeAll
     [ manageDocks 
     , className =? "MPlayer"         --> doFloat
+    , className =? "crx_nngceckbapebfimnlniiiahkandclblb" --> doFloat -- bitwarden
     , className =? "matlab"          --> doIgnore
     , className =? "Gimp"            --> doFloat
     , className =? "spotify"         --> doFloat
@@ -356,18 +378,19 @@ myLogHook xmproc0 xmproc1 xmproc2 = dynamicLogWithPP $ xmobarPP
 -- By default, do nothing.
 myStartupHook = do 
     spawnOnce "bash -c \"export $(dbus-launch)\""
-    spawnOnce "sh ~/.screenlayout/layout0.sh &"
-    spawnOnce "sleep 3"
+    spawnOnce "sh ~/.screenlayout/layout0.sh; nitrogen --restore &"
+    -- spawnOnce "sleep 3"
     spawnOnce "picom &"
     spawnOnce "(synclient TapButton2=3 && synclient TapButton1=1) &"
-    spawnOnce "nitrogen --restore &"
     spawnOnce "dunst &"
     spawnOnce "lxpolkit &"
     spawnOnce "emacs --daemon &"
     spawnOnce "xautolock -time 10 -locker i3lock -i /usr/share/wallpapers/EveningGlow/contents/images/2560x1440.jpg &"
     spawnOnce "pasystray &"
     spawnOnce "pa-applet &"
+    spawnOnce "blueman-applet &"
     spawnOnce "parcellite &"
+    spawnOnce "kdeconnectd &"
 
     -- spawnOnce "~/.config/xmonad/scripts/systray.sh &"
 
@@ -379,7 +402,7 @@ myStartupHook = do
 main = do 
     spawn "nm-applet &"
     spawn "trayer --margin 0 --edge top --align right --SetDockType true --SetPartialStrut true --expand true --widthtype request --width 96 --height 25 --transparent true --tint 0x161925 --alpha 0 --monitor 0 --padding 2 &"
-    spawn "sleep 1"
+    -- spawn "sleep 1"
     xmproc0 <- spawnPipe "xmobar -x 0 ~/.config/xmobar/xmobar.config"
     xmproc1 <- spawnPipe "xmobar -x 1 ~/.config/xmobar/xmobar.config"
     xmproc2 <- spawnPipe "xmobar -x 2 ~/.config/xmobar/xmobar.config"

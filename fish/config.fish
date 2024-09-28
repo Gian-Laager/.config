@@ -2,7 +2,6 @@
 # Hide welcome message
 set fish_greeting
 set VIRTUAL_ENV_DISABLE_PROMPT "1"
-set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
 
 ## Export variable need for qt-theme
 if type "qtile" >> /dev/null 2>&1
@@ -101,6 +100,7 @@ alias la='exa -a --color=always --group-directories-first --icons'  # all files 
 alias ll='exa -l --color=always --group-directories-first --icons'  # long format
 alias lt='exa -aT --color=always --group-directories-first --icons' # tree listing
 alias l.="exa -a | grep -E '^\.'"                                     # show only dotfiles
+alias rm="trash"                                     # show only dotfiles
 
 # Replace some more things with better alternatives
 alias cat='bat'
@@ -155,11 +155,16 @@ alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
 
 set -q GHCUP_INSTALL_BASE_PREFIX[1]; or set GHCUP_INSTALL_BASE_PREFIX $HOME ; set -gx PATH $HOME/.cabal/bin $PATH /home/gianl/.ghcup/bin # ghcup-env
 
+set -x MANPAGER "bat -l man -p"
+set -x TERM "alacritty-direct"
+
 ## Run paleofetch if session is interactive
 if status --is-interactive
-   set -U PF_ASCII "arch"
-   pfetch
    if set -q TMUX
+       set -gx PF_ASCII "arch"
+       set -gx PF_INFO "ascii title os host kernel uptime memory" 
+
+       pfetch
        return
    else 
        exec tmux

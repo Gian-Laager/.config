@@ -55,8 +55,11 @@
 (package! workspace :disable t)
 (package! auctex)
 (package! ox-rst)
+(package! key-chord)
 (package! chatgpt-arcana
   :recipe (:host github :repo "CarlQLange/ChatGPT-Arcana.el" :files ("*.el")))
+(package! cdlatex)
+(package! yasnippet)
 (after! 'chatgpt-arcana (setq chatgpt-arcana-api-key "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"))
 (package! org-preview-html)
 (after! 'ox-rst (require 'ox-rst))
