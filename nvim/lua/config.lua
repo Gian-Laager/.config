@@ -64,6 +64,12 @@ require('nvim_comment').setup({
   hook = function()
     if vim.api.nvim_buf_get_option(0, "filetype") == "glsl" then
         vim.api.nvim_buf_set_option(0, "commentstring", "// %s")
+    elseif vim.bo.filetype == 'cl' then
+      vim.bo.commentstring = '// %s'
+    elseif vim.bo.filetype == 'cpp' then
+      vim.bo.commentstring = '// %s'
+    elseif vim.bo.filetype == 'c' then
+      vim.bo.commentstring = '// %s'
     end
   end
 })
@@ -496,6 +502,7 @@ vim.api.nvim_set_keymap('v', '<leader>at', ':CopilotChatTests<CR>', { noremap = 
 vim.api.nvim_set_keymap('v', '<leader>ae', ':CopilotChatExplain<CR>', { noremap = true, silent = true })
 vim.api.nvim_set_keymap('n', '<leader>ax', ':CopilotChatStop<CR>', { noremap = true, silent = true })
 
+
 vim.opt_local.spell = true
 vim.opt.spelloptions = "camel"
 vim.opt.spellcapcheck = ""  -- don't check for capital letters at start of sentence
@@ -509,14 +516,4 @@ vim.api.nvim_create_autocmd("FileType", {
   end
 })
 
-local lsp = require('lsp-zero')
-local util = require('lspconfig.util')
-
--- Define a custom formatter using findent
-local function findent_formatter(bufnr)
-  return {
-    exe = "findent",
-    args = {},
-    stdin = true,
-  }
-end
+vim.api.nvim_set_keymap('n', '<leader>t', ':Topen<CR>', { noremap = true, silent = true })
