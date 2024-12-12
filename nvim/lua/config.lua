@@ -207,9 +207,11 @@ require 'lspconfig'.jdtls.setup {
 }
 
 require 'lspconfig'.hls.setup {
-    cmd = { "haskell-language-server", "--lsp" },
+    cmd = { "stack", "exec", "--", "haskell-language-server-wrapper", "--lsp" },
     filetypes = { 'haskell', 'lhaskell', 'cabal' },
 }
+
+
 
 require'lspconfig'.clangd.setup{
     cmd = { "clangd", '--background-index', '--clang-tidy', '--clang-tidy-checks=\\*' },

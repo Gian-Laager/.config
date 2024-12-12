@@ -389,7 +389,7 @@ myStartupHook = do
     spawnOnce "pasystray &"
     spawnOnce "pa-applet &"
     spawnOnce "blueman-applet &"
-    spawnOnce "parcellite &"
+    -- spawnOnce "parcellite &"
     spawnOnce "kdeconnectd &"
 
     -- spawnOnce "~/.config/xmonad/scripts/systray.sh &"

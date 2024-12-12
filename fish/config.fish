@@ -155,7 +155,8 @@ alias rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
 
 set -q GHCUP_INSTALL_BASE_PREFIX[1]; or set GHCUP_INSTALL_BASE_PREFIX $HOME ; set -gx PATH $HOME/.cabal/bin $PATH /home/gianl/.ghcup/bin # ghcup-env
 
-set -x MANPAGER "bat -l man -p"
+# set -x MANPAGER "bat -l man -p"
+set -x MANPAGER "less"
 set -x TERM "alacritty-direct"
 
 ## Run paleofetch if session is interactive

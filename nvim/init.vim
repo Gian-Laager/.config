@@ -196,6 +196,8 @@ imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
 let g:copilot_no_tab_map = v:true
 let g:copilot_enabled = v:false
 
+let g:hls_formatting = 1
+let g:hls_indent_size = 2
 
 
 "
