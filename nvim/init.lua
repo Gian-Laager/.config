@@ -62,8 +62,6 @@ vim.opt.signcolumn = "yes"
 vim.opt.colorcolumn = "120"
 vim.opt.termguicolors = true
 
-vim.cmd [[colorscheme onedark]]
-
 -- Define diagnostic signs
 vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError", linehl = "", numhl = "" })
 vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn", linehl = "", numhl = "" })
@@ -147,6 +145,7 @@ require('packer').startup(function(use)
     end
 end)
 
+vim.cmd [[colorscheme onedark]]
 
 require 'nvim-treesitter.configs'.setup {
     -- A list of parser names, or "all"
