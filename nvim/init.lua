@@ -89,9 +89,9 @@ end
 
 local ensure_packer = function()
     local fn = vim.fn
-    local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+    local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
     if fn.empty(fn.glob(install_path)) > 0 then
-        fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+        fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
         vim.cmd [[packadd packer.nvim]]
         return true
     end
@@ -107,6 +107,9 @@ require('packer').startup(function(use)
         'nvim-telescope/telescope.nvim', tag = '0.1.8',
         requires = { { 'nvim-lua/plenary.nvim' } }
     }
+
+    use 'nvim-tree/nvim-web-devicons'
+    use 'ryanoasis/vim-devicons'
 
     use 'hrsh7th/nvim-cmp'
     use 'hrsh7th/cmp-path'
@@ -139,11 +142,15 @@ require('packer').startup(function(use)
     use 'lervag/vimtex'
     use 'github/copilot.vim'
     use 'petRUShka/vim-opencl'
+    use 'nvimdev/lspsaga.nvim'
 
     if packer_bootstrap then
         require('packer').sync()
     end
 end)
+
+require('nvim-web-devicons').setup()
+vim.g.NERDTreeShowIcons = 1
 
 vim.cmd [[colorscheme onedark]]
 
@@ -178,6 +185,20 @@ require('gitsigns').setup {
 }
 
 require('lualine').setup {}
+
+require('nvim_comment').setup({
+    hook = function()
+        if vim.api.nvim_buf_get_option(0, "filetype") == "glsl" then
+            vim.api.nvim_buf_set_option(0, "commentstring", "// %s")
+        elseif vim.bo.filetype == 'cl' then
+            vim.bo.commentstring = '// %s'
+        elseif vim.bo.filetype == 'cpp' then
+            vim.bo.commentstring = '// %s'
+        elseif vim.bo.filetype == 'c' then
+            vim.bo.commentstring = '// %s'
+        end
+    end
+})
 
 -- Dap
 require("dapui").setup {}
@@ -283,18 +304,20 @@ local on_attach = function(client, bufnr)
     bufmap('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>') -- Go to implementation
     bufmap('n', '<C-k>', vim.lsp.buf.hover)
     bufmap('n', 'K', vim.lsp.buf.hover)
-    bufmap('i', '<C-k>', vim.lsp.buf.hover)
-    bufmap('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>')    -- Rename symbol
-    bufmap('n', '<leader>', '<cmd>lua vim.lsp.buf.code_action()<CR>') -- Code actions
-    bufmap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>')        -- Show references
-    bufmap('n', '<leader>', '<cmd>lua vim.lsp.buf.references()<CR>')  -- Show references
-    bufmap('n', '<leader>cf', '<cmd> lua vim.lsp.buf.format()<CR>')
+    bufmap('i', '<C-k>', vim.lsp.buf.signature_help)
+    bufmap('n', '<leader>rn', '<cmd>:Lspsaga rename<CR>')      -- Rename symbol
+    -- bufmap('n', '<leader>rn', nvim.lsp.buf.rename)    -- Rename symbol
+    bufmap('n', '<leader>ca', '<cmd>:Lspsaga code_action<CR>') -- Code actions
+    -- bufmap('n', '<leader>ca', '<cmd>lua vim.lsp.buf.code_action()<CR>') -- Code actions
+    bufmap('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>') -- Show references
+    bufmap('n', '<leader>cf', '<cmd>lua vim.lsp.buf.format()<CR>')
 end
 
 -- Set up LSP servers with lspconfig
 vim.lsp.handlers["textDocument/publishDiagnostics"] =
-vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics,
-{ update_in_insert = true })
+    vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics,
+        { update_in_insert = true })
+
 
 local lspconfig = require('lspconfig')
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
@@ -302,7 +325,7 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 lspconfig.fortls.setup {
     root_dir = function(fname)
         return lspconfig.util.root_pattern('compile_commands.json')(fname) or
-        lspconfig.util.find_git_ancestor(fname)
+            lspconfig.util.find_git_ancestor(fname)
     end,
     settings = {
         fortls = {
@@ -321,7 +344,9 @@ require 'lspconfig'.jdtls.setup {
     }
 }
 
-require('lspconfig').clangd.setup {}
+require 'lspconfig'.clangd.setup {
+    cmd = { "clangd", '--background-index', '--clang-tidy', '--clang-tidy-checks=\\*' },
+}
 
 require('lspconfig').lua_ls.setup {}
 
@@ -375,6 +400,29 @@ for _, lsp in ipairs(servers) do
         }
     }
 end
+
+
+require('lspsaga').setup({
+    code_action = {
+        num_shortcut = true,
+        show_server_name = false,
+        extend_gitsigns = false,
+        keys = {
+            quit = 'q',
+            exec = '<CR>',
+        },
+    },
+    lightbulb = {
+        enable = false,
+    },
+
+    symbol_in_winbar = {
+        enable = false,
+    },
+    beacon = {
+        enable = false,
+    },
+})
 
 -- Shader Stuff
 vim.cmd [[
