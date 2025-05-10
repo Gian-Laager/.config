@@ -63,10 +63,28 @@ vim.opt.colorcolumn = "120"
 vim.opt.termguicolors = true
 
 -- Define diagnostic signs
-vim.fn.sign_define("DiagnosticSignError", { text = "", texthl = "DiagnosticSignError", linehl = "", numhl = "" })
-vim.fn.sign_define("DiagnosticSignWarn", { text = "", texthl = "DiagnosticSignWarn", linehl = "", numhl = "" })
-vim.fn.sign_define("DiagnosticSignInfo", { text = "", texthl = "DiagnosticSignInfo", linehl = "", numhl = "" })
-vim.fn.sign_define("DiagnosticSignHint", { text = "", texthl = "DiagnosticSignHint", linehl = "", numhl = "" })
+vim.diagnostic.config({
+    update_in_insert = true, 
+    signs = {
+        text = {
+          [vim.diagnostic.severity.ERROR] = "",
+          [vim.diagnostic.severity.WARN]  = "",
+          [vim.diagnostic.severity.INFO]  = "",
+          [vim.diagnostic.severity.HINT]  = "",
+        },
+        -- Optional: Add highlights if needed
+        texthl = {
+          [vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
+          [vim.diagnostic.severity.WARN]  = "DiagnosticSignWarn",
+          [vim.diagnostic.severity.INFO]  = "DiagnosticSignInfo",
+          [vim.diagnostic.severity.HINT]  = "DiagnosticSignHint",
+        },
+        -- Optional line and number highlighting
+        linehl = {},
+        numhl = {},
+    }
+})
+
 
 function file_exists(name)
     local file = io.open(name, "r")        -- Try to open the file in read mode
@@ -313,12 +331,6 @@ local on_attach = function(client, bufnr)
     bufmap('n', '<leader>cf', '<cmd>lua vim.lsp.buf.format()<CR>')
 end
 
--- Set up LSP servers with lspconfig
-vim.lsp.handlers["textDocument/publishDiagnostics"] =
-    vim.lsp.with(vim.lsp.diagnostic.on_publish_diagnostics,
-        { update_in_insert = true })
-
-
 local lspconfig = require('lspconfig')
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
@@ -346,6 +358,17 @@ require 'lspconfig'.jdtls.setup {
 
 require 'lspconfig'.clangd.setup {
     cmd = { "clangd", '--background-index', '--clang-tidy', '--clang-tidy-checks=\\*' },
+    root_dir = function(fname)
+      return util.root_pattern(
+        '.clangd',
+        '.vim',
+        '.clang-tidy',
+        '.clang-format',
+        'compile_commands.json',
+        'compile_flags.txt',
+        'configure.ac' -- AutoTools
+      )(fname) or vim.fs.dirname(vim.fs.find('.git', { path = fname, upward = true })[1])
+    end,
 }
 
 require('lspconfig').lua_ls.setup {}
@@ -381,7 +404,7 @@ local servers = {
     'rust_analyzer',
     'pyright',
     'lua_ls',
-    'cmake',
+    -- 'cmake',
     'fortls',
     'jsonls',
     'ltex',

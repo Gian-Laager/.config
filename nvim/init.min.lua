@@ -63,14 +63,15 @@ vim.diagnostic.config({ update_in_insert = true })
 vim.keymap.set('n', '<space>e', vim.diagnostic.open_float)
 
 local on_lsp_attatch = function(opts) 
-        vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
-        vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
-        vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
-        vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
-        vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, opts)
-        vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
-        vim.keymap.set('n', '<leader>cf', vim.lsp.buf.format, opts)
-        vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
+    print("lsp attatched")
+    vim.keymap.set('n', 'gd', vim.lsp.buf.definition, opts)
+    vim.keymap.set('n', 'gi', vim.lsp.buf.implementation, opts)
+    vim.keymap.set('n', 'gr', vim.lsp.buf.references, opts)
+    vim.keymap.set('n', 'K', vim.lsp.buf.hover, opts)
+    vim.keymap.set('i', '<C-k>', vim.lsp.buf.signature_help, opts)
+    vim.keymap.set('n', '<leader>ca', vim.lsp.buf.code_action, opts)
+    vim.keymap.set('n', '<leader>cf', vim.lsp.buf.format, opts)
+    vim.keymap.set('n', '<leader>rn', vim.lsp.buf.rename, opts)
 end 
 
 if vim.fn.executable('clangd') == 1 then 
@@ -95,7 +96,7 @@ if vim.fn.executable('clangd') == 1 then
     })
 end
 
-if vim.fn.executable('pylsp') == 1 then 
+if vim.fn.executable('pyright') == 1 then 
     autocmd("FileType", {
         pattern = { 'python' },
         callback = function()
@@ -104,8 +105,8 @@ if vim.fn.executable('pylsp') == 1 then
             ) or vim.fn.getcwd()
 
             local client = vim.lsp.start({
-                name = 'pylsp',
-                cmd = { 'pylsp' },
+                name = 'pyright',
+                cmd = { 'pyright' },
                 root_dir = root_dir,
             })
 

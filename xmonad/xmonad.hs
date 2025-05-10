@@ -28,6 +28,7 @@ import XMonad.Hooks.StatusBar
 import XMonad.Hooks.StatusBar.PP 
 import XMonad.Hooks.WindowSwallowing
 import Graphics.X11.ExtraTypes.XF86
+import XMonad.Hooks.SetWMName
 
 import Data.Char (isSpace, toUpper)
 import Data.Maybe (fromJust)
@@ -109,11 +110,11 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_u     ), spawn "rofi -show window")
 
     -- , ((modm,               xK_a     ), spawn ("rofi -show perplexity -theme-str '" ++ rofiPerpexityConfig ++ "'"))
-    , ((modm,               xK_a     ), spawn "chromium 'https://www.perplexity.ai/'")
+    , ((modm,               xK_a     ), spawn "firefox 'https://www.perplexity.ai/'")
     , ((modm,               xK_d     ), spawn "rofi -show duckduckgo")
 
-    , ((modm,               xK_f     ), spawn "chromium")
-    , ((modm .|. shiftMask, xK_F     ), spawn "firedragon")
+    , ((modm,               xK_f     ), spawn "firefox")
+    , ((modm .|. shiftMask, xK_F     ), spawn "chromium")
 
     , ((modm,               xK_o     ), spawn "thunar")
 
@@ -294,6 +295,7 @@ myManageHook =  composeAll
     , className =? "MPlayer"         --> doFloat
     , className =? "crx_nngceckbapebfimnlniiiahkandclblb" --> doFloat -- bitwarden
     , className =? "matlab"          --> doIgnore
+    , className =? "paraview"          --> doIgnore
     , className =? "Gimp"            --> doFloat
     , className =? "spotify"         --> doFloat
     , resource  =? "desktop_window"  --> doIgnore
@@ -391,6 +393,8 @@ myStartupHook = do
     spawnOnce "blueman-applet &"
     -- spawnOnce "parcellite &"
     spawnOnce "kdeconnectd &"
+    setWMName "LG3D"
+    spawnOnce "xrandr --dpi 96 &"
 
     -- spawnOnce "~/.config/xmonad/scripts/systray.sh &"
 
