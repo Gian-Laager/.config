@@ -64,20 +64,20 @@ vim.opt.termguicolors = true
 
 -- Define diagnostic signs
 vim.diagnostic.config({
-    update_in_insert = true, 
+    update_in_insert = true,
     signs = {
         text = {
-          [vim.diagnostic.severity.ERROR] = "",
-          [vim.diagnostic.severity.WARN]  = "",
-          [vim.diagnostic.severity.INFO]  = "",
-          [vim.diagnostic.severity.HINT]  = "",
+            [vim.diagnostic.severity.ERROR] = "",
+            [vim.diagnostic.severity.WARN]  = "",
+            [vim.diagnostic.severity.INFO]  = "",
+            [vim.diagnostic.severity.HINT]  = "",
         },
         -- Optional: Add highlights if needed
         texthl = {
-          [vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
-          [vim.diagnostic.severity.WARN]  = "DiagnosticSignWarn",
-          [vim.diagnostic.severity.INFO]  = "DiagnosticSignInfo",
-          [vim.diagnostic.severity.HINT]  = "DiagnosticSignHint",
+            [vim.diagnostic.severity.ERROR] = "DiagnosticSignError",
+            [vim.diagnostic.severity.WARN]  = "DiagnosticSignWarn",
+            [vim.diagnostic.severity.INFO]  = "DiagnosticSignInfo",
+            [vim.diagnostic.severity.HINT]  = "DiagnosticSignHint",
         },
         -- Optional line and number highlighting
         linehl = {},
@@ -357,17 +357,21 @@ require 'lspconfig'.jdtls.setup {
 }
 
 require 'lspconfig'.clangd.setup {
-    cmd = { "clangd", '--background-index', '--clang-tidy', '--clang-tidy-checks=\\*' },
+    cmd = { "clangd",
+        '--background-index',
+        '--clang-tidy',
+        '--clang-tidy-checks=\\*',
+    },
     root_dir = function(fname)
-      return util.root_pattern(
-        '.clangd',
-        '.vim',
-        '.clang-tidy',
-        '.clang-format',
-        'compile_commands.json',
-        'compile_flags.txt',
-        'configure.ac' -- AutoTools
-      )(fname) or vim.fs.dirname(vim.fs.find('.git', { path = fname, upward = true })[1])
+        return util.root_pattern(
+            '.clangd',
+            '.vim',
+            '.clang-tidy',
+            '.clang-format',
+            'compile_commands.json',
+            'compile_flags.txt',
+            'configure.ac' -- AutoTools
+        )(fname) or vim.fs.dirname(vim.fs.find('.git', { path = fname, upward = true })[1])
     end,
 }
 

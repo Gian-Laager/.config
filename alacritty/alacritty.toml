@@ -37,11 +37,8 @@ text = "CellForeground"
 [cursor]
 style = "Underline"
 
-[env]
-TERM = "alacritty-direct"
-
 [font]
-size = 10
+size = 11
 
 [font.bold]
 family = "FantasqueSansMNerdFont"
@@ -102,8 +99,8 @@ hide_when_typing = true
 history = 10000
 multiplier = 3
 
-[terminal.shell]
-program = "/usr/bin/fish"
+# [terminal.shell]
+# program = "/usr/bin/fish"
 
 [window]
 decorations = "full"

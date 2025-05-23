@@ -114,7 +114,6 @@ myKeys conf@(XConfig {XMonad.modMask = modm}) = M.fromList $
     , ((modm,               xK_d     ), spawn "rofi -show duckduckgo")
 
     , ((modm,               xK_f     ), spawn "firefox")
-    , ((modm .|. shiftMask, xK_F     ), spawn "chromium")
 
     , ((modm,               xK_o     ), spawn "thunar")
 
@@ -395,6 +394,8 @@ myStartupHook = do
     spawnOnce "kdeconnectd &"
     setWMName "LG3D"
     spawnOnce "xrandr --dpi 96 &"
+    spawnOnce "xinput set-prop \"ELAN1201:00 04F3:3098 Touchpad\" \"libinput Natural Scrolling Enabled\" 1"
+    spawnOnce "xinput set-prop \"ELAN1201:00 04F3:3098 Touchpad\" \"libinput Tapping Enabled\" 1"
 
     -- spawnOnce "~/.config/xmonad/scripts/systray.sh &"
 

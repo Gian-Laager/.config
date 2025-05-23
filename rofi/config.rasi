@@ -1,8 +1,8 @@
 configuration {
 
- modi: "window,drun,ssh,combi,run,perplexity:~/.config/rofi/perplexity-search.sh,duckduckgo:~/.config/rofi/duckduckgo-search.sh";
+ modi: "window,drun,ssh,combi,run";
 
- font: "hack 10";
+ font: "Fantasque Sans Mono 13";
 
  combi-modi: "window,drun,ssh,run";
 
