@@ -38,13 +38,11 @@
         "markdown": false,
         "cpp": true
     },
-    "github.copilot.advanced": {
-    
-    },
     "github.copilot.inlineSuggest.enable": true,
     "[python]": {
         "editor.formatOnType": true
     },
-    "workbench.colorTheme": "Default Dark Modern",
+    "workbench.colorTheme": "Dark Modern",
     "application.shellEnvironmentResolutionTimeout": 100,
+    "git.openRepositoryInParentFolders": "never",
 }
