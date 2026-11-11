@@ -1,5 +1,6 @@
 -- Set leader key
 vim.g.mapleader = " "
+-- vim.opt.textwidth = 85
 
 -- Insert mode mappings
 vim.keymap.set('i', 'jj', '<Esc>')
@@ -86,6 +87,109 @@ vim.diagnostic.config({
 })
 
 
+local ensure_packer = function()
+    local fn = vim.fn
+    local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
+    if fn.empty(fn.glob(install_path)) > 0 then
+        fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
+        vim.cmd [[packadd packer.nvim]]
+        return true
+    end
+    return false
+end
+
+local packer_bootstrap = ensure_packer()
+
+require('packer').startup(function(use)
+    use 'wbthomason/packer.nvim'
+
+    use {
+        'nvim-telescope/telescope.nvim',
+        requires = { { 'nvim-lua/plenary.nvim' } }
+    }
+
+    use 'nvim-tree/nvim-web-devicons'
+    use 'ryanoasis/vim-devicons'
+
+    use 'hrsh7th/nvim-cmp'
+    use 'hrsh7th/cmp-path'
+    use 'hrsh7th/cmp-buffer'
+    use 'ThePrimeagen/harpoon'
+    use 'kuangliu/onedark.vim'
+    use 'EdenEast/nightfox.nvim'
+    use 'kassio/neoterm'
+    use 'jreybert/vimagit'
+    use 'terrortylor/nvim-comment'
+    use 'preservim/nerdtree'
+
+    use 'mason-org/mason.nvim'
+    use 'mason-org/mason-lspconfig.nvim'
+    use 'mbbill/undotree'
+    use {
+        'nvim-treesitter/nvim-treesitter',
+        branch = "main",
+        run = ':TSUpdate',
+    }
+
+    use 'lewis6991/gitsigns.nvim'
+    use 'neovim/nvim-lspconfig'
+    use 'hrsh7th/cmp-nvim-lsp'
+
+    use {
+        'mfussenegger/nvim-dap',
+    }
+    use {
+        'rcarriga/nvim-dap-ui',
+        requires = { { 'nvim-neotest/nvim-nio' } },
+    }
+    use 'nvim-lualine/lualine.nvim'
+    use 'ThePrimeagen/vim-be-good'
+    use 'lervag/vimtex'
+    use 'github/copilot.vim'
+    use 'petRUShka/vim-opencl'
+    use 'esensar/nvim-dev-container'
+
+    use 'nvimdev/lspsaga.nvim'
+
+    use {
+        "iamcco/markdown-preview.nvim",
+        run = "cd app && npm install",
+        ft = { "markdown" }
+    }
+
+    use 'dhruvasagar/vim-table-mode'
+    use 'aklt/plantuml-syntax'
+
+    use {
+        "niuiic/typst-preview.nvim",
+        ft = "typst",
+        run = "cargo build --release",
+        config = function()
+            require("typst-preview").setup({
+                viewer = {
+                    method = "pdf",
+                    pdf_viewer_cmd = "zathura %s",
+                    background = true,
+                },
+            })
+        end
+    }
+
+    use {
+        'Julian/lean.nvim',
+        requires = {
+            'neovim/nvim-lspconfig',
+            'nvim-lua/plenary.nvim',
+            'hrsh7th/nvim-cmp',     -- optional, for completion
+            'hrsh7th/cmp-nvim-lsp', -- optional, for completion
+        },
+    }
+
+    if packer_bootstrap then
+        require('packer').sync()
+    end
+end)
+
 function file_exists(name)
     local file = io.open(name, "r")        -- Try to open the file in read mode
     if file then
@@ -105,82 +209,63 @@ elseif file_exists(".vim") then
     vim.cmd("source .vim")
 end
 
-local ensure_packer = function()
-    local fn = vim.fn
-    local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
-    if fn.empty(fn.glob(install_path)) > 0 then
-        fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
-        vim.cmd [[packadd packer.nvim]]
+require('nvim-web-devicons').setup()
+vim.g.NERDTreeShowIcons = 1
+
+local function is_docker()
+    local f = io.open("/.dockerenv", "r") or io.open("/run/.dockerenv", "r")
+    if f then
+        f:close()
         return true
     end
     return false
 end
 
-local packer_bootstrap = ensure_packer()
+if is_docker() then
+    vim.cmd [[colorscheme carbonfox]]
+else
+    vim.cmd [[colorscheme onedark]]
+end
 
-require('packer').startup(function(use)
-    use 'wbthomason/packer.nvim'
+require('nvim-treesitter').setup({})
 
-    use {
-        'nvim-telescope/telescope.nvim', tag = '0.1.8',
-        requires = { { 'nvim-lua/plenary.nvim' } }
-    }
+require('nvim-treesitter').install({
+    'bash',
+    'c',
+    'cmake',
+    'cpp',
+    'fortran',
+    'glsl',
+    'json',
+    -- 'latex',
+    'lua',
+    'markdown',
+    'markdown_inline',
+    'python',
+    'query',
+    'typst',
+    'vim',
+    'vimdoc',
+    'wgsl',
+    'julia',
+})
 
-    use 'nvim-tree/nvim-web-devicons'
-    use 'ryanoasis/vim-devicons'
+require('nvim-treesitter.install').prefer_git = true
+require('nvim-treesitter.install').compilers = { "gcc", "clang" }
 
-    use 'hrsh7th/nvim-cmp'
-    use 'hrsh7th/cmp-path'
-    use 'hrsh7th/cmp-buffer'
-    use 'ThePrimeagen/harpoon'
-    use 'kuangliu/onedark.vim'
-    use 'EdenEast/nightfox.nvim'
-    use 'kassio/neoterm'
-    use 'jreybert/vimagit'
-    use 'terrortylor/nvim-comment'
-    use 'preservim/nerdtree'
+-- vim.treesitter.language.register('latex', 'tex')
+vim.treesitter.language.register('c', 'opencl')
 
-    use 'williamboman/mason.nvim'
-    use 'mbbill/undotree'
-    use {
-        'nvim-treesitter/nvim-treesitter',
-        run = ':TSUpdate',
-    }
-
-    use 'lewis6991/gitsigns.nvim'
-    use 'neovim/nvim-lspconfig'
-    use 'hrsh7th/cmp-nvim-lsp'
-
-    use {
-        'rcarriga/nvim-dap-ui',
-        requires = { { 'nvim-neotest/nvim-nio', 'mfussenegger/nvim-dap' } },
-    }
-    use 'nvim-lualine/lualine.nvim'
-    use 'ThePrimeagen/vim-be-good'
-    use 'lervag/vimtex'
-    use 'github/copilot.vim'
-    use 'petRUShka/vim-opencl'
-    use 'nvimdev/lspsaga.nvim'
-
-    if packer_bootstrap then
-        require('packer').sync()
-    end
-end)
-
-require('nvim-web-devicons').setup()
-vim.g.NERDTreeShowIcons = 1
-
-vim.cmd [[colorscheme onedark]]
-
-require 'nvim-treesitter.configs'.setup {
-    -- A list of parser names, or "all"
-    ensure_installed = { "cpp", "c", "python" },
-    ignore_install = { "latex" },
-    auto_install = true,
-    highlight = {
-        enable = true,
-    }
-}
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = {
+        'bash', 'c', 'cmake', 'cpp', 'fortran', 'glsl', 'json',
+        'lua', 'markdown', 'opencl', 'python', 'query',
+        'typst', 'vim', 'wgsl', 'julia'
+    },
+    callback = function(ev)
+        pcall(vim.treesitter.start, ev.buf)
+    end,
+})
 
 require("harpoon").setup {
     menu = {
@@ -189,7 +274,27 @@ require("harpoon").setup {
 }
 
 require('telescope').setup {}
+
+local servers = {
+    -- 'jdtls',
+    'clangd',
+    -- 'rust_analyzer',
+    'pyright',
+    'lua_ls',
+    'cmake',
+    'fortls',
+    'jsonls',
+    'ltex',
+    -- 'taplo',
+    -- 'wgsl_analyzer',
+    'bashls',
+    'julials',
+    -- 'hls',
+}
 require('mason').setup()
+-- require("mason-lspconfig").setup({
+--     ensure_installed = servers,
+-- })
 
 require('gitsigns').setup {
     signs = {
@@ -331,64 +436,76 @@ local on_attach = function(client, bufnr)
     bufmap('n', '<leader>cf', '<cmd>lua vim.lsp.buf.format()<CR>')
 end
 
-local lspconfig = require('lspconfig')
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 
-lspconfig.fortls.setup {
-    root_dir = function(fname)
-        return lspconfig.util.root_pattern('compile_commands.json')(fname) or
-            lspconfig.util.find_git_ancestor(fname)
-    end,
+vim.lsp.config('fortls', {
+    -- Searches upward for these markers; the first match becomes the root
+    root_markers = { 'compile_commands.json', '.git' },
     settings = {
         fortls = {
             commandPath = '',
         }
     }
-}
+})
 
-require('lspconfig').pyright.setup {}
+vim.lsp.enable('pyright')
 
-require 'lspconfig'.jdtls.setup {
+vim.lsp.config('julials', {
+    -- cmd = { 'julia', '--startup-file=no', '--history-file=no' },
+    filetypes = { 'julia' },
+    root_markers = { 'Project.toml', 'Manifest.toml', '.git' },
+})
+
+vim.lsp.enable('julials')
+
+vim.lsp.config('jdtls', {
     init_options = {
         extendedClientCapabilities = {
             classFileContentsSupport = true
         }
     }
-}
+})
 
-require 'lspconfig'.clangd.setup {
-    cmd = { "clangd",
-        '--background-index',
-        '--clang-tidy',
-        '--clang-tidy-checks=\\*',
+vim.lsp.config('clangd', {
+    cmd = {
+        "clangd",
+        "--background-index",
+        "--clang-tidy",
+        "--clang-tidy-checks=*",
     },
-    root_dir = function(fname)
-        return util.root_pattern(
-            '.clangd',
-            '.vim',
-            '.clang-tidy',
-            '.clang-format',
-            'compile_commands.json',
-            'compile_flags.txt',
-            'configure.ac' -- AutoTools
-        )(fname) or vim.fs.dirname(vim.fs.find('.git', { path = fname, upward = true })[1])
+    filetypes = { "c", "cpp", "objc", "objcpp" },
+})
+
+vim.api.nvim_create_autocmd('FileType', {
+    pattern = { 'c', 'cpp' },
+    callback = function()
+        vim.bo.textwidth = 100
+        vim.bo.formatexpr = ''                           -- also needs to be reset after LSP attach, see below
+        vim.bo.formatoptions = vim.bo.formatoptions ..
+        'cqj'                                            -- c: wrap comments, q: allow gq on comments, j: join comment leaders
     end,
-}
+})
+vim.api.nvim_create_autocmd('LspAttach', {
+    callback = function(args)
+        if vim.bo[args.buf].filetype:match('^c') then vim.bo[args.buf].formatexpr = '' end
+    end,
+})
 
-require('lspconfig').lua_ls.setup {}
+vim.lsp.config('lua_ls', {})
 
-require 'lspconfig'.glsl_analyzer.setup {
+vim.lsp.config('glsl_analyzer', {
     filetypes = { "glsl", "vert", "tesc", "tese", "frag", "geom", "comp" }
-}
+})
 
-require 'lspconfig'.opencl_ls.setup {
+vim.lsp.config('opencl_ls', {
     filetypes = { "opencl" }
-}
+})
 
-require 'lspconfig'.hls.setup {
+vim.lsp.config('hls', {
     cmd = { "stack", "exec", "--", "haskell-language-server-wrapper", "--lsp" },
     filetypes = { 'haskell', 'lhaskell', 'cabal' },
-}
+})
+
 vim.g.hls_formatting = 1
 vim.g.hls_indent_size = 2
 vim.api.nvim_create_autocmd("FileType", {
@@ -402,30 +519,15 @@ vim.api.nvim_create_autocmd("FileType", {
     end,
 })
 
-local servers = {
-    'jdtls',
-    'clangd',
-    'rust_analyzer',
-    'pyright',
-    'lua_ls',
-    -- 'cmake',
-    'fortls',
-    'jsonls',
-    'ltex',
-    'taplo',
-    'wgsl_analyzer',
-    'bashls',
-    'hls',
-}
-
 for _, lsp in ipairs(servers) do
-    lspconfig[lsp].setup {
+    vim.lsp.enable(lsp)
+    vim.lsp.config(lsp, {
         capabilities = capabilities,
         on_attach = on_attach,
         flags = {
             debounce_text_changes = 150,
         }
-    }
+    })
 end
 
 
@@ -473,16 +575,32 @@ autocmd BufNewFile,BufRead *.wgsl set filetype=wgsl
 
 -- LaTeX and spellchecking
 vim.opt_local.spell = false
+vim.opt_local.spelllang = { "en_us", "de_ch" }
 vim.opt.spelloptions = "camel"
 vim.opt.spellcapcheck = "" -- don't check for capital letters at start of sentence
+
+vim.lsp.config('ltex', {
+    settings = {
+        ltex = {
+            language = "en-US",             -- primary language for UI/messages
+            enabled = { "en-US", "de-CH" }, -- enable spell/grammar for both languages
+            -- Optional: configure additional rules, dictionaries, etc.
+            additionalRules = {
+                motherTongue = "de-CH", -- helps style checking for Swiss German native speakers
+            },
+            dictionary = {},            -- you can add custom words here if needed
+        },
+    },
+})
 
 vim.api.nvim_create_autocmd("FileType", {
     pattern = { "tex", "latex" },
     callback = function()
         vim.opt_local.spell = true
-        vim.opt.spelloptions = "camel"
-        vim.opt.spellcapcheck = "" -- don't check for capital letters at start of sentence
-    end
+        vim.opt_local.spelllang = { "en_us", "de_ch" }
+        vim.opt_local.spelloptions = "camel"
+        vim.opt_local.spellcapcheck = "" -- don't check for capital letters at start of sentence
+    end,
 })
 
 vim.g.vimtex_view_method = 'zathura'
@@ -490,6 +608,70 @@ vim.g.vimtex_view_general_viewer = 'okular'
 vim.g.vimtex_view_general_options = '--unique file:@pdf\\#src:@line@tex'
 vim.g.vimtex_compiler_method = 'latexmk'
 
+-- Enable spell check automatically for Markdown
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = "markdown",
+    callback = function()
+        vim.opt_local.spell = true
+        vim.opt_local.spelllang = { "en_us", "de_ch" } -- set your preferred language
+    end,
+})
+
 -- Copliot
 vim.g.copilot_no_tab_map = true
 vim.g.copilot_enabled = false
+
+require("devcontainer").setup({
+    -- By default all mounts are added (config, data and state)
+    -- This can be changed to disable mounts or change their options
+    -- This can be useful to mount local configuration
+    -- And any other mounts when attaching to containers with this plugin
+    attach_mounts = {
+        neovim_config = {
+            -- enables mounting local config to /root/.config/nvim in container
+            enabled = false,
+            -- makes mount readonly in container
+            options = { "readonly" }
+        },
+        neovim_data = {
+            -- enables mounting local data to /root/.local/share/nvim in container
+            enabled = false,
+            -- no options by default
+            options = {}
+        },
+        -- Only useful if using neovim 0.8.0+
+        neovim_state = {
+            -- enables mounting local state to /root/.local/state/nvim in container
+            enabled = false,
+            -- no options by default
+            options = {}
+        },
+    },
+})
+
+-- Set global variables before plugin loads
+vim.g.mkdp_browser = 'firefox'
+vim.g.mkdp_theme = 'dark'
+vim.g.mkdp_browserfunc = 'MkdpOpenInFirefoxWindow'
+
+-- Define custom function to launch Firefox in a new window
+vim.cmd([[
+function! MkdpOpenInFirefoxWindow(url)
+  execute 'silent !firefox --new-window ' . shellescape(a:url)
+endfunction
+]])
+
+vim.g.maplocalleader = '  '
+
+vim.g.lean_config = { mappings = true }
+-- require('lean').setup {
+--     abbreviations = { builtin = true },
+--     mappings = true,
+-- }
+
+-- vim.lsp.setup("leanls", {
+--     mappings = true,
+--     lsp = {
+--         enable = true,
+--     },
+-- })

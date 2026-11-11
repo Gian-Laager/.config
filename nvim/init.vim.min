@@ -1,0 +1,27 @@
+imap jj <esc>
+
+let mapleader = ' '
+
+nmap <leader>j <C-W>j
+nmap <leader>k <C-W>k
+nmap <leader>l <C-W>l
+nmap <leader>h <C-W>h
+
+tmap <esc> <C-\><C-n>
+tmap jj <C-\><C-n>
+
+set relativenumber
+set number
+set nowrap
+
+set tabstop=4
+set softtabstop=4
+set shiftwidth=4
+set autoindent
+set expandtab 
+
+nmap <leader>cf :!clang-format -i %<CR>
+nmap <leader>pe :edit 
+nmap <leader>pb :buffer 
+
+colorscheme vim
