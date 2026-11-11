@@ -185,6 +185,14 @@ require('packer').startup(function(use)
         },
     }
 
+    use {
+        'coder/claudecode.nvim',
+        requires = { 'folke/snacks.nvim' },
+        config = function()
+            require('claudecode').setup()
+        end
+    }
+
     if packer_bootstrap then
         require('packer').sync()
     end
@@ -274,6 +282,13 @@ require("harpoon").setup {
 }
 
 require('telescope').setup {}
+
+vim.keymap.set('n', '<leader>Cc', '<cmd>ClaudeCode<CR>')
+vim.keymap.set('n', '<leader>Cf', '<cmd>ClaudeCodeFocus<CR>')
+vim.keymap.set('n', '<leader>Cb', '<cmd>ClaudeCodeAdd %<CR>')
+vim.keymap.set('v', '<leader>Cs', '<cmd>ClaudeCodeSend<CR>')
+vim.keymap.set('n', '<leader>Ca', '<cmd>ClaudeCodeDiffAccept<CR>')
+vim.keymap.set('n', '<leader>Cd', '<cmd>ClaudeCodeDiffDeny<CR>')
 
 local servers = {
     -- 'jdtls',
